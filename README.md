@@ -1,108 +1,75 @@
-# 🚀 Vite + React + TailwindCSS + ShadCN/UI Boilerplate
+# React + TypeScript + Vite
 
-This repository provides a boilerplate for setting up a modern frontend development environment using Vite, React, TailwindCSS, and ShadCN/UI components. It's designed to help you kickstart your projects with a clean and efficient setup.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
----
+Currently, two official plugins are available:
 
-## 📦 Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-* **Vite**: Blazing fast build tool for modern web projects.
-* **React**: Library for building user interfaces.
-* **TailwindCSS**: Utility-first CSS framework for rapid UI development.
-* **ShadCN/UI**: Beautifully designed and accessible UI components.
-* **ESLint**: Pluggable linting utility for JavaScript and JSX.
-* **Prettier**: Opinionated code formatter.([github.com][1], [github.com][2], [github.com][3])
+## React Compiler
 
----
+The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
 
-## 🛠️ Getting Started
+Note: This will impact Vite dev & build performances.
 
-### Prerequisites
+## Expanding the ESLint configuration
 
-* [Node.js](https://nodejs.org/en/) (v14 or higher)
-* [Git](https://git-scm.com/)
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-### Installation
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-1. **Clone the repository:**
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-   ```bash
-   git clone https://github.com/aniruddhabagal/vite-react-shadcn.git
-   cd vite-react-shadcn
-   ```
-
-
-
-2. **Install dependencies:**
-
-   ```bash
-   npm install
-   ```
-
-
-
-3. **Start the development server:**
-
-   ```bash
-   npm run dev
-   ```
-
-
-
-Your application will be available at `http://localhost:5173/`.
-
----
-
-## 📁 Project Structure
-
-```bash
-vite-react-shadcn/
-├── public/                 # Static assets
-├── src/                    # Source code
-│   ├── components/         # Reusable components
-│   ├── App.jsx             # Main application component
-│   └── main.jsx            # Entry point
-├── components.json         # ShadCN/UI configuration
-├── index.html              # HTML template
-├── package.json            # Project metadata and scripts
-├── tailwind.config.js      # TailwindCSS configuration
-├── postcss.config.js       # PostCSS configuration
-├── vite.config.js          # Vite configuration
-└── README.md               # Project documentation
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
----
-
-## 📄 Scripts
-
-| Command           | Description                          |
-| ----------------- | ------------------------------------ |
-| `npm run dev`     | Start the development server         |
-| `npm run build`   | Build the application for production |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint`    | Run ESLint to analyze code           |
-| `npm run format`  | Format code using Prettier           |
-
----
-
-## 🎨 Customization
-
-* **TailwindCSS**: Modify `tailwind.config.js` to customize your design system.
-* **ShadCN/UI**: Configure components in `components.json` as per your requirements.([github.com][3], [shadcn-marketplace.vercel.app][5])
-
----
-
-## 📚 Resources
-
-* [Vite Documentation](https://vitejs.dev/)
-* [React Documentation](https://reactjs.org/)
-* [TailwindCSS Documentation](https://tailwindcss.com/)
-* [ShadCN/UI Documentation](https://ui.shadcn.com/)
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
